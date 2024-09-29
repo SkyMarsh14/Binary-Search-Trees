@@ -6,10 +6,9 @@ class Node{
     }
 }
 
-class Tree{
+export default class Tree{
     constructor(arr){
-        this.arr=arr;
-        this.root=null;
+        this.root=this.buildTree(arr);
     }
 
     buildTree(array){
@@ -21,12 +20,13 @@ class Tree{
 
         function sortedArrayToBST(sortedArr,start,end){
             if(start>end) return null;
-            let mid = parseInt((start + end)/2);
+            let mid = Math.floor((start + end)/2);
             let node =new Node(sortedArr[mid]);
             sortedArr.left=sortedArrayToBST(sortedArr,start,mid -1);
             sortedArr.right=sortedArrayToBST(sortedArr,mid + 1,end);
 
             return node;
         }
+        return sortedArrayToBST(sortedArr,0,sortedArr.length -1);
     }
 }
