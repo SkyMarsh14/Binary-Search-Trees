@@ -132,6 +132,10 @@ export default class Tree {
       processLevel([tree])
   }
   inOrder(callback,tree=this.root){
+    if (typeof callback !== "function") {
+        throw new Error("Callback needs to be a function.");
+      }
+
     if(tree===null) return;
 
     this.inOrder(tree.left);
@@ -139,15 +143,37 @@ export default class Tree {
     this.inOrder(tree.right);
   }
   preOrder(callback,tree=this.root){
+    if (typeof callback !== "function") {
+        throw new Error("Callback needs to be a function.");
+      }
+
     if(tree===null) return;
     callback(tree);
     this.preOrder(tree.left);
     this.preOrder(tree.right);
   }
   postOrder(callback,tree=this.root){
+    if (typeof callback !== "function") {
+        throw new Error("Callback needs to be a function.");
+      }
+
     if(tree===null) return;
     this.postOrder(tree.left);
     this.postOrder(tree.right);
     callback(tree);
+  }
+  height(node){
+    if(!node) return -1;
+    let leftHeight=height(node.left);
+    let rightHeight=height(node.right);
+    return 1+Math.max(leftHeight,rightHeight);
+  }
+  depth(node,currentNode=this.root,currentDepth=0){
+    if(!currentNode) return -1;
+    if(currentNode===node) return currentDepth;
+    let leftDepth=this.depth(node,currentNode.left,currentDepth+1);
+    if(leftDepth !==-1) return currentDepth;
+    
+    return this.depth(node,currentNode.right,currentDepth+1);
   }
 }
