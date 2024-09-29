@@ -59,23 +59,36 @@
             :this.insert(value,tree.left);
         
         }
-        deleteItem(value,tree=this.root){
-            if(value===tree.data){
-                if(tree.right===null&&tree.left===null){
-                    tree=null;
-                    return;
+            getMinValueNode(node){
+                let current=node;
+                while(current.left !==null){
+                    current=current.left;
                 }
-                if(tree.right===null){
-                    tree=tree.left;
-                    return;
+                return current;
+            }
+            deleteItem(value,tree=this.root){
+                if(tree===null) return tree;
+
+                if(value<tree.data){
+                    tree.left=this.deleteItem(value,tree.left)
+                }else if(value>tree.data){
+                    tree.right=this.deleteItem(value,tree.right);
+                }else{
+                    if(tree.left===null){
+                        return tree.right;
+                    }else if(tree.right===null){
+                        return tree.left;
+                    }
+
+                    let minNode=this.getMinValueNode(tree.right);
+                    tree.data=minNode.data;
+                    tree.right=this.deleteItem(minNode.data,tree.right);
                 }
-                if(tree.left===null){
-                    tree=tree.right;
-                    return;
-                }
-                }
-                
-                (tree.data>value)?this.deleteItem(value,tree.left):this.deleteItem(value,tree.right);
-            };
-            
-        }
+                return tree;
+            }
+            find(value,tree=this.root){
+                if(value===tree.data) return tree;
+
+                (value>tree.data)?find(value,tree.right):this.find(value,tree.left);
+            }
+    }
