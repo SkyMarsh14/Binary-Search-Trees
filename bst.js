@@ -59,4 +59,23 @@
             :this.insert(value,tree.left);
         
         }
-    }
+        deleteItem(value,tree=this.root){
+            if(value===tree.data){
+                if(tree.right===null&&tree.left===null){
+                    tree=null;
+                    return;
+                }
+                if(tree.right===null){
+                    tree=tree.left;
+                    return;
+                }
+                if(tree.left===null){
+                    tree=tree.right;
+                    return;
+                }
+                }
+                
+                (tree.data>value)?this.deleteItem(value,tree.left):this.deleteItem(value,tree.right);
+            };
+            
+        }
