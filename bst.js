@@ -88,7 +88,25 @@
             }
             find(value,tree=this.root){
                 if(value===tree.data) return tree;
-
+                if(tree.right===null&&tree.left===null){
+                    throw new Error('Value Not Found!');
+                }
                 (value>tree.data)?find(value,tree.right):this.find(value,tree.left);
             }
+
+            levelOrder(callback,tree=this.root){
+                if(typeof callback !=='function'){
+                    throw new Error('Callback needs to be a function.')
+                }
+                let arr=[]
+                while(tree){
+                    arr.push(tree.right,tree.left);
+                    tree=tree.left;
+                    tree=tree.right;
+                }
+            }
+    }
+
+    function a(node){
+        console.log(node);
     }
