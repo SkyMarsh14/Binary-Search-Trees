@@ -176,4 +176,8 @@ export default class Tree {
     
     return this.depth(node,currentNode.right,currentDepth+1);
   }
+  isBalanced(){
+   const diff = Math.abs(this.depth(this.root.right)-this.depth(this.root.left));
+   return (diff<1)?true:false;
+  }
 }
