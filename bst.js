@@ -6,7 +6,7 @@ class Node {
   }
 }
 
-export default class Tree {
+export class Tree {
   constructor(arr) {
     this.arr = arr;
     this.root = null;
@@ -105,79 +105,102 @@ export default class Tree {
     const queue = [tree];
 
     while (queue.length) {
-        const currentNode=queue.shift();
-        callback(currentNode);
-        if(currentNode.left) queue.push(currentNode.left);
-        if(currentNode.right) queue.push(currentNode.right);
+      const currentNode = queue.shift();
+      callback(currentNode);
+      if (currentNode.left) queue.push(currentNode.left);
+      if (currentNode.right) queue.push(currentNode.right);
     }
   }
-  levelOrderRec(callback,tree=this.root){
+  levelOrderRec(callback, tree = this.root) {
     if (typeof callback !== "function") {
-        throw new Error("Callback needs to be a function.");
-      }
-      const processLevel=(nodes)=>{
-        if(nodes.length===0) return;
-      
-      nodes.forEach(node=>callback(node));
+      throw new Error("Callback needs to be a function.");
+    }
+    const processLevel = (nodes) => {
+      if (nodes.length === 0) return;
 
-      const nextLevel=[];
-      nodes.forEach(node=>{
-        if(node.left) nextLevel.push(node.left);
-        if(node.right) nextLevel.push(node.right);
+      nodes.forEach((node) => callback(node));
+
+      const nextLevel = [];
+      nodes.forEach((node) => {
+        if (node.left) nextLevel.push(node.left);
+        if (node.right) nextLevel.push(node.right);
       });
-      (function(){
+      (function () {
         processLevel(nextLevel);
       })();
+    };
+    processLevel([tree]);
+  }
+  inOrder(callback, tree = this.root) {
+    if (typeof callback !== "function") {
+      throw new Error("Callback needs to be a function.");
     }
-      processLevel([tree])
-  }
-  inOrder(callback,tree=this.root){
-    if (typeof callback !== "function") {
-        throw new Error("Callback needs to be a function.");
-      }
 
-    if(tree===null) return;
+    if (tree === null) return;
 
-    this.inOrder(tree.left);
+    this.inOrder(callback, tree.left);
     callback(tree);
-    this.inOrder(tree.right);
+    this.inOrder(callback, tree.right);
   }
-  preOrder(callback,tree=this.root){
+  preOrder(callback, tree = this.root) {
     if (typeof callback !== "function") {
-        throw new Error("Callback needs to be a function.");
-      }
+      throw new Error("Callback needs to be a function.");
+    }
 
-    if(tree===null) return;
+    if (tree === null) return;
     callback(tree);
     this.preOrder(tree.left);
     this.preOrder(tree.right);
   }
-  postOrder(callback,tree=this.root){
+  postOrder(callback, tree = this.root) {
     if (typeof callback !== "function") {
-        throw new Error("Callback needs to be a function.");
-      }
+      throw new Error("Callback needs to be a function.");
+    }
 
-    if(tree===null) return;
+    if (tree === null) return;
     this.postOrder(tree.left);
     this.postOrder(tree.right);
     callback(tree);
   }
-  height(node){
-    if(!node) return -1;
-    let leftHeight=height(node.left);
-    let rightHeight=height(node.right);
-    return 1+Math.max(leftHeight,rightHeight);
+  height(node) {
+    if (!node) return -1;
+    let leftHeight = height(node.left);
+    let rightHeight = height(node.right);
+    return 1 + Math.max(leftHeight, rightHeight);
   }
-  depth(node,currentNode=this.root,currentDepth=0){
-    if(!currentNode) return -1;
-    if(currentNode===node) return currentDepth;
-    let leftDepth=this.depth(node,currentNode.left,currentDepth+1);
-    if(leftDepth !==-1) return currentDepth;
-    
-    return this.depth(node,currentNode.right,currentDepth+1);
+  depth(node, currentNode = this.root, currentDepth = 0) {
+    if (!currentNode) return -1;
+    if (currentNode === node) return currentDepth;
+    let leftDepth = this.depth(node, currentNode.left, currentDepth + 1);
+    if (leftDepth !== -1) return leftDepth;
+
+    return this.depth(node, currentNode.right, currentDepth + 1);
   }
-  isBalanced(){
-   const diff = Math.abs(this.depth(this.root.right)-this.depth(this.root.left));
-   return (diff<1)?true:false;
+  isBalanced() {
+    function checkBalance(node) {
+      if (node === null) return 0;
+      const leftHeight = checkBalance(node.left);
+      if (leftHeight === -1) return -1;
+      const rightHeight = checkBalance(node.right);
+      if (rightHeight === -1) return -1;
+      if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+      return Math.max(leftHeight, rightHeight) + 1;
+    }
+    return checkBalance(this.root) !== -1;
   }
+  rebalance() {
+    let arr = [];
+    this.inOrder((node) => {
+      arr.push(node.data);
+    });
+    this.root = this.buildTree(arr);
+  }
+}
+
+export function returnRandomArr(arrLength) {
+  let arr = [];
+  for (let i = 0; i < arrLength; i++) {
+    arr.push(Math.floor(Math.random() * 100));
+  }
+  return arr;
 }
